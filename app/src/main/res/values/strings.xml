@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="textView_total">Total score: </string>
+    <string name="textView_turnScore">Turn score: </string>
+    <string name="textView_zero">0</string>
 </resources>
