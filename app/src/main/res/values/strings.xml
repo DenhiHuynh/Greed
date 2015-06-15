@@ -6,4 +6,6 @@
     <string name="textView_total">Total score: </string>
     <string name="textView_turnScore">Turn score: </string>
     <string name="textView_zero">0</string>
+    <string name="button_score">Score</string>
+    <string name="button_roll">Roll</string>
 </resources>

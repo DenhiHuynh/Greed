@@ -138,23 +138,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_unselected"
-            android:text="Save" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/button_unselected"
-            android:text="Score" />
+            android:onClick="Score"
+            android:text="@string/button_score" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="Roll"
             android:background="@drawable/button_unselected"
-            android:text="Throw" />
+            android:text="@string/button_roll" />
     </LinearLayout>
 </RelativeLayout>
