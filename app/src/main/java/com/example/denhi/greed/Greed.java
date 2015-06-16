@@ -33,11 +33,12 @@ public class Greed {
 
     /**
      * Rolls all 6 dices
+     *
      * @return the dice value for each dice so it can be updated in the user interface.
      */
-    public ArrayList<Integer> rollAllDices(){
+    public ArrayList<Integer> rollAllDices() {
         ArrayList<Integer> diceValueList = new ArrayList<>();
-        for(Dice d:diceList){
+        for (Dice d : diceList) {
             diceValueList.add(d.rollDice());
         }
         return diceValueList;
@@ -45,9 +46,10 @@ public class Greed {
 
     /**
      * Saves turn score into total score
+     *
      * @return if the player has won
      */
-    public boolean addToTotalScore(){
+    public boolean addToTotalScore() {
         totalScore += turnScore;
         turnScore = 0;
         rounds++;
@@ -56,17 +58,19 @@ public class Greed {
 
     /**
      * Gets the total score
+     *
      * @return the total score
      */
-    public int getTotalScore(){
+    public int getTotalScore() {
         return totalScore;
     }
 
     /**
      * Gets the total score
+     *
      * @return the total score
      */
-    public int getRounds(){
+    public int getRounds() {
         return rounds;
     }
 
@@ -77,10 +81,13 @@ public class Greed {
      */
     public int evaluateScore() {
         int score = GreedRules.calculateRoundScore(diceList);
-        //Check how many point a dice throw should give
-        return score;
+        if (score < 300) {
+            turnScore = 0;
+        } else {
+            turnScore += score;
+        }
+        return turnScore;
     }
-
 
 
 }
