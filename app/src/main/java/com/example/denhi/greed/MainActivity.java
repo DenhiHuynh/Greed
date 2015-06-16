@@ -1,5 +1,6 @@
 package com.example.denhi.greed;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -62,7 +63,11 @@ public class MainActivity extends ActionBarActivity {
             totalScore.setText(Integer.toString(total));
             turnScore.setText(Integer.toString(0));
         }else{
-            //Start new haswon activity, add total score and number of rounds as extras.
+            //Erase info to start new game
+            Intent intent = new Intent(this,WinScreenActivity.class);
+            intent.putExtra("Total", total);
+            intent.putExtra("Rounds",greed.getRounds());
+            startActivity(intent);
         }
     }
 

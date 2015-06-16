@@ -8,4 +8,5 @@
     <string name="textView_zero">0</string>
     <string name="button_score">Score</string>
     <string name="button_roll">Roll</string>
+    <string name="title_activity_win_screen">WinScreenActivity</string>
 </resources>
