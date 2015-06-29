@@ -10,7 +10,7 @@ public class Dice {
     private boolean holdDiceValue;
 
     public Dice(){
-        diceValue = 0;
+        diceValue = 1;
         holdDiceValue = false;
     }
 
@@ -34,6 +34,7 @@ public class Dice {
      */
     public int rollDice(){
         if(holdDiceValue){
+            holdDiceValue = false;
             return diceValue;
         }else {
             Random rand = new Random();

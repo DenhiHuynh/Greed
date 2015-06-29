@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -56,25 +55,26 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void Score(View view) {
+    public void score(View view) {
         boolean hasWon = greed.addToTotalScore();
         int total = greed.getTotalScore();
-        if(!hasWon) {
+        int turn = greed.getTurnScore();
+        if (!hasWon) {
             totalScore.setText(Integer.toString(total));
-            turnScore.setText(Integer.toString(0));
-        }else{
+            turnScore.setText(Integer.toString(turn));
+        } else {
             //Erase info to start new game
-            Intent intent = new Intent(this,WinScreenActivity.class);
+            Intent intent = new Intent(this, WinScreenActivity.class);
             intent.putExtra("Total", total);
-            intent.putExtra("Rounds",greed.getRounds());
+            intent.putExtra("Rounds", greed.getRounds());
             startActivity(intent);
         }
     }
 
-    public void Roll(View view) {
+    public void roll(View view) {
         ArrayList<Integer> diceValues = greed.rollAllDices();
         for (int i = 0; i < 6; i++) {
-            drawDice(diceValues.get(i), i+1);
+            drawDice(diceValues.get(i), i + 1);
         }
         int thisTurnScore = greed.evaluateScore();
         turnScore.setText(Integer.toString(thisTurnScore));

@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@drawable/dice4" />
+            android:src="@drawable/dice5" />
 
         <ImageView
             android:id="@+id/diceImage5"
@@ -117,7 +117,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:gravity="center"
-            android:src="@drawable/dice5" />
+            android:src="@drawable/dice6" />
 
         <ImageView
             android:id="@+id/diceImage6"
@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@drawable/dice6" />
+            android:src="@drawable/dice4" />
     </LinearLayout>
 
     <LinearLayout
@@ -142,14 +142,14 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/button_unselected"
-            android:onClick="Score"
+            android:onClick="score"
             android:text="@string/button_score" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="Roll"
+            android:onClick="roll"
             android:background="@drawable/button_unselected"
             android:text="@string/button_roll" />
     </LinearLayout>

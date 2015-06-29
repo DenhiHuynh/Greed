@@ -14,11 +14,8 @@ public class GreedRules {
      * @return the total score given from triplets, straight and number values.
      */
     public static int calculateRoundScore(ArrayList<Dice> diceList) {
-        int total = 0;
-        total = calculateStraightScore(diceList);
-        if (total == 0) { //I'm checking for straight before checking points for 1s and 5s here instead of making another check in the method calculateNumberScore.
-            total += calculateNumberScore(diceList);
-        }
+        int total = calculateStraightScore(diceList);
+        total += calculateNumberScore(diceList);
         total += calculateTripletScore(diceList);
         return total;
     }
