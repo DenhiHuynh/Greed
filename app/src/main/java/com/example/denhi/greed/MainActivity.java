@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,6 @@ public class MainActivity extends ActionBarActivity {
         dice6 = (ImageView) findViewById(R.id.diceImage6);
         turnScore = (TextView) findViewById(R.id.turnScore);
         totalScore = (TextView) findViewById(R.id.totalScore);
-
     }
 
     @Override
@@ -62,6 +62,9 @@ public class MainActivity extends ActionBarActivity {
         if (!hasWon) {
             totalScore.setText(Integer.toString(total));
             turnScore.setText(Integer.toString(turn));
+                Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
+                        Toast.LENGTH_SHORT).show();
+
         } else {
             //Erase info to start new game
             Intent intent = new Intent(this, WinScreenActivity.class);
@@ -72,41 +75,65 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void roll(View view) {
-        ArrayList<Integer> diceValues = greed.rollAllDices();
+        greed.rollAllDices();
+        int thisTurnScore = greed.evaluateScore();
+        turnScore.setText(Integer.toString(thisTurnScore));
+        ArrayList<Dice> diceValues = greed.getDiceList();
         for (int i = 0; i < 6; i++) {
             drawDice(diceValues.get(i), i + 1);
         }
-        int thisTurnScore = greed.evaluateScore();
-        turnScore.setText(Integer.toString(thisTurnScore));
+        if(greed.isNewRound()){
+            Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * Draws the new image to the correct imageView.
      *
-     * @param diceValue  The value of the new dice
+     * @param dice  The value of the new dice
      * @param diceNumber Which dice to change.
      */
-    private void drawDice(int diceValue, int diceNumber) {
-        int imageDrawableId = findImageResource(diceValue);
+    private void drawDice(Dice dice, int diceNumber) {
+        int imageDrawableId = findImageResource(dice.getDiceValue());
+        boolean holdDice = dice.getHoldDice();
         if (imageDrawableId != -1) {
             switch (diceNumber) {
                 case 1:
                     dice1.setImageResource(imageDrawableId);
+                    if(!holdDice){
+                        dice1.setAlpha(1.0f);
+                    }
                     break;
                 case 2:
                     dice2.setImageResource(imageDrawableId);
+                    if(!holdDice){
+                        dice2.setAlpha(1.0f);
+                    }
                     break;
                 case 3:
                     dice3.setImageResource(imageDrawableId);
+                    if(!holdDice){
+                        dice3.setAlpha(1.0f);
+                    }
                     break;
                 case 4:
                     dice4.setImageResource(imageDrawableId);
+                    if(!holdDice){
+                        dice4.setAlpha(1.0f);
+                    }
                     break;
                 case 5:
                     dice5.setImageResource(imageDrawableId);
+                    if(!holdDice){
+                        dice5.setAlpha(1.0f);
+                    }
                     break;
                 case 6:
                     dice6.setImageResource(imageDrawableId);
+                    if(!holdDice){
+                        dice6.setAlpha(1.0f);
+                    }
                     break;
 
             }
@@ -136,6 +163,37 @@ public class MainActivity extends ActionBarActivity {
 
         }
         return -1; //This should never happen
+    }
+
+
+    public void saveDiceValue(View view) {
+        switch(view.getId()){
+            case R.id.diceImage1:
+                greed.setHoldDice(0,true);
+                dice1.setAlpha(0.5f);
+                break;
+            case R.id.diceImage2:
+                greed.setHoldDice(1,true);
+                dice2.setAlpha(0.5f);
+                break;
+            case R.id.diceImage3:
+                greed.setHoldDice(2,true);
+                dice3.setAlpha(0.5f);
+                break;
+            case R.id.diceImage4:
+                greed.setHoldDice(3,true);
+                dice4.setAlpha(0.5f);
+                break;
+            case R.id.diceImage5:
+                greed.setHoldDice(4,true);
+                dice5.setAlpha(0.5f);
+                break;
+            case R.id.diceImage6:
+                greed.setHoldDice(5,true);
+                dice6.setAlpha(0.5f);
+                break;
+
+        }
     }
 
 

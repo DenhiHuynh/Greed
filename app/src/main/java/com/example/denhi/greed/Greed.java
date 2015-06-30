@@ -6,13 +6,16 @@ import java.util.ArrayList;
  * Created by Denhi on 2015-06-08.
  */
 public class Greed {
-    private int totalScore, turnScore, rounds;
+    private int totalScore, turnScore, rounds, lastRollScore;
+    private boolean newRound;
     private ArrayList<Dice> diceList;
 
     public Greed() {
         totalScore = 0;
+        lastRollScore = 0;
         turnScore = 0;
         rounds = 0;
+        newRound = true;
         diceList = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             Dice dice = new Dice();
@@ -36,13 +39,28 @@ public class Greed {
      *
      * @return the dice value for each dice so it can be updated in the user interface.
      */
-    public ArrayList<Integer> rollAllDices() {
-        ArrayList<Integer> diceValueList = new ArrayList<>();
-        for (Dice d : diceList) {
-            int newValue = d.rollDice();
-            diceValueList.add(newValue);
+    public void rollAllDices() {
+        if(allDiceOnHold()){
+            resetDiceHold();
         }
-        return diceValueList;
+        for (Dice d : diceList) {
+            d.rollDice();
+        }
+    }
+
+    private boolean allDiceOnHold() {
+        for(Dice d: diceList){
+            if(!d.getHoldDice()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void resetDiceHold() {
+        for(Dice d: diceList){
+            d.setHoldDiceValue(false);
+        }
     }
 
     /**
@@ -54,6 +72,8 @@ public class Greed {
         totalScore += turnScore;
         turnScore = 0;
         rounds++;
+        newRound = true;
+        resetDiceHold();
         return totalScore >= 10000;
     }
 
@@ -82,16 +102,38 @@ public class Greed {
      */
     public int evaluateScore() {
         int score = GreedRules.calculateRoundScore(diceList);
-        if (score < 300) {
+        if (newRound && score < 300) {
+            resetDiceHold();
             turnScore = 0;
-        } else {
+        } else if(newRound && score>= 300) {
+            resetDiceHold();
+            newRound = false;
+            lastRollScore = score;
             turnScore += score;
+        } else {
+            int newPoints = Math.abs(score - lastRollScore);
+            if (newPoints == 0) {
+                resetDiceHold();
+                newRound = true;
+                lastRollScore = 0;
+                turnScore = 0;
+            }else{
+                lastRollScore = score;
+                turnScore += newPoints;
+            }
         }
         return turnScore;
     }
 
+    public ArrayList<Dice> getDiceList(){
+        return diceList;
+    }
 
     public int getTurnScore() {
         return turnScore;
+    }
+
+    public boolean isNewRound() {
+        return newRound;
     }
 }
