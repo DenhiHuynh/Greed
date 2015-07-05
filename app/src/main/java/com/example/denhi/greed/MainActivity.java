@@ -1,5 +1,7 @@
 package com.example.denhi.greed;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -62,8 +64,12 @@ public class MainActivity extends ActionBarActivity {
         if (!hasWon) {
             totalScore.setText(Integer.toString(total));
             turnScore.setText(Integer.toString(turn));
-                Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
-                        Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
+                    Toast.LENGTH_SHORT).show();
+            ArrayList<Dice> diceValues = greed.getDiceList();
+            for (int i = 0; i < 6; i++) {
+                drawDice(diceValues.get(i), i + 1);
+            }
 
         } else {
             //Erase info to start new game
@@ -75,23 +81,28 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void roll(View view) {
-        greed.rollAllDices();
-        int thisTurnScore = greed.evaluateScore();
-        turnScore.setText(Integer.toString(thisTurnScore));
-        ArrayList<Dice> diceValues = greed.getDiceList();
-        for (int i = 0; i < 6; i++) {
-            drawDice(diceValues.get(i), i + 1);
-        }
-        if(greed.isNewRound()){
-            Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
+        boolean success = greed.rollAllDices();
+        if (!success) {
+            Toast.makeText(getApplicationContext(), getString(R.string.Roll_fail_message),
                     Toast.LENGTH_SHORT).show();
+        } else {
+            int thisTurnScore = greed.evaluateScore();
+            turnScore.setText(Integer.toString(thisTurnScore));
+            ArrayList<Dice> diceValues = greed.getDiceList();
+            for (int i = 0; i < 6; i++) {
+                drawDice(diceValues.get(i), i + 1);
+            }
+            if (greed.isNewRound()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     /**
      * Draws the new image to the correct imageView.
      *
-     * @param dice  The value of the new dice
+     * @param dice       The value of the new dice
      * @param diceNumber Which dice to change.
      */
     private void drawDice(Dice dice, int diceNumber) {
@@ -101,37 +112,37 @@ public class MainActivity extends ActionBarActivity {
             switch (diceNumber) {
                 case 1:
                     dice1.setImageResource(imageDrawableId);
-                    if(!holdDice){
+                    if (!holdDice) {
                         dice1.setAlpha(1.0f);
                     }
                     break;
                 case 2:
                     dice2.setImageResource(imageDrawableId);
-                    if(!holdDice){
+                    if (!holdDice) {
                         dice2.setAlpha(1.0f);
                     }
                     break;
                 case 3:
                     dice3.setImageResource(imageDrawableId);
-                    if(!holdDice){
+                    if (!holdDice) {
                         dice3.setAlpha(1.0f);
                     }
                     break;
                 case 4:
                     dice4.setImageResource(imageDrawableId);
-                    if(!holdDice){
+                    if (!holdDice) {
                         dice4.setAlpha(1.0f);
                     }
                     break;
                 case 5:
                     dice5.setImageResource(imageDrawableId);
-                    if(!holdDice){
+                    if (!holdDice) {
                         dice5.setAlpha(1.0f);
                     }
                     break;
                 case 6:
                     dice6.setImageResource(imageDrawableId);
-                    if(!holdDice){
+                    if (!holdDice) {
                         dice6.setAlpha(1.0f);
                     }
                     break;
@@ -167,34 +178,63 @@ public class MainActivity extends ActionBarActivity {
 
 
     public void saveDiceValue(View view) {
-        switch(view.getId()){
+        boolean success = false;
+        switch (view.getId()) {
             case R.id.diceImage1:
-                greed.setHoldDice(0,true);
-                dice1.setAlpha(0.5f);
+                success = greed.setHoldDice(0, true);
+                if(success) {
+                    dice1.setAlpha(0.5f);
+                }
                 break;
             case R.id.diceImage2:
-                greed.setHoldDice(1,true);
-                dice2.setAlpha(0.5f);
+                success = greed.setHoldDice(1, true);
+                if(success) {
+                    dice2.setAlpha(0.5f);
+                }
                 break;
             case R.id.diceImage3:
-                greed.setHoldDice(2,true);
-                dice3.setAlpha(0.5f);
+                success = greed.setHoldDice(2,true);
+                if(success) {
+                    dice3.setAlpha(0.5f);
+                }
                 break;
             case R.id.diceImage4:
-                greed.setHoldDice(3,true);
-                dice4.setAlpha(0.5f);
+                success = greed.setHoldDice(3, true);
+                if(success) {
+                    dice4.setAlpha(0.5f);
+                }
                 break;
             case R.id.diceImage5:
-                greed.setHoldDice(4,true);
-                dice5.setAlpha(0.5f);
+                success = greed.setHoldDice(4, true);
+                if(success) {
+                    dice5.setAlpha(0.5f);
+                }
                 break;
             case R.id.diceImage6:
-                greed.setHoldDice(5,true);
-                dice6.setAlpha(0.5f);
+                success = greed.setHoldDice(5, true);
+                if(success) {
+                    dice6.setAlpha(0.5f);
+                }
                 break;
-
+        }
+        if(!success){
+            Toast.makeText(getApplicationContext(), "Can not hold any dice during first round",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();
+    }
 
 }

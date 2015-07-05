@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class Greed {
     private int totalScore, turnScore, rounds, lastRollScore;
-    private boolean newRound;
+    private boolean newRound , lastRollHadFullHold;
     private ArrayList<Dice> diceList;
 
     public Greed() {
@@ -16,6 +16,7 @@ public class Greed {
         turnScore = 0;
         rounds = 0;
         newRound = true;
+        lastRollHadFullHold = false;
         diceList = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             Dice dice = new Dice();
@@ -29,9 +30,13 @@ public class Greed {
      * @param diceNbr which dice to hold the value for, starting from index 0 to 5.
      * @param value   the value to hold.
      */
-    public void setHoldDice(int diceNbr, boolean value) {
+    public boolean setHoldDice(int diceNbr, boolean value) {
+        if(newRound){
+            return false;
+        }
         Dice dice = diceList.get(diceNbr);
         dice.setHoldDiceValue(value);
+        return true;
     }
 
     /**
@@ -39,13 +44,27 @@ public class Greed {
      *
      * @return the dice value for each dice so it can be updated in the user interface.
      */
-    public void rollAllDices() {
+    public boolean rollAllDices() {
+        if(!newRound && noDiceOnHold()){
+            return false;
+        }
         if(allDiceOnHold()){
+            lastRollHadFullHold = true;
             resetDiceHold();
         }
         for (Dice d : diceList) {
             d.rollDice();
         }
+        return true;
+    }
+
+    private boolean noDiceOnHold() {
+        for(Dice d: diceList){
+            if(d.getHoldDice()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean allDiceOnHold() {
@@ -111,7 +130,13 @@ public class Greed {
             lastRollScore = score;
             turnScore += score;
         } else {
-            int newPoints = Math.abs(score - lastRollScore);
+            int newPoints;
+            if(lastRollHadFullHold){
+                lastRollHadFullHold = false;
+                newPoints = score;
+            }else {
+                newPoints = Math.abs(score - lastRollScore);
+            }
             if (newPoints == 0) {
                 resetDiceHold();
                 newRound = true;

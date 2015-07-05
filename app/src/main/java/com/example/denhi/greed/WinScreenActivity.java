@@ -1,5 +1,7 @@
 package com.example.denhi.greed;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -48,9 +50,26 @@ public class WinScreenActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void StartNewGame(View view){
+    public void startNewGame(View view){
         //Return to old screen
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Start new game")
+                    .setMessage("Would you like to start a new game?")
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            startNewGame(null);
+                        }
+                    }).create().show();
+
+
     }
 }
