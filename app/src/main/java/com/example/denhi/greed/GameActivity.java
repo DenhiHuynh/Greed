@@ -1,13 +1,16 @@
 package com.example.denhi.greed;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,16 +18,31 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
+public class GameActivity extends ActionBarActivity {
     private Greed greed;
     private ImageView dice1, dice2, dice3, dice4, dice5, dice6;
     private TextView turnScore, totalScore;
+    private SharedPreferences prefs;
+    private boolean onGoingGameExists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        greed = new Greed();
+
+        prefs = this.getSharedPreferences("greed", Context.MODE_PRIVATE);
+        onGoingGameExists = prefs.getBoolean("resume", false);
+        if(!onGoingGameExists){
+            greed = new Greed();
+        }else{
+//            start ongoing game here
+//            int totalScore = prefs.getInt("totalScore", -1);
+//            int roundScore = prefs.getInt("roundScore", -1);
+//            int rounds = prefs.getInt("rounds", -1);
+//            int lastRollScore = prefs.getInt("lastRollScore", -1);
+//            boolean newRound = prefs.getBoolean("newRound", false);
+//            boolean lastRollHadFullHold = prefs.getBoolean("lastRollHadFullHold",false);
+        }
         dice1 = (ImageView) findViewById(R.id.diceImage1);
         dice2 = (ImageView) findViewById(R.id.diceImage2);
         dice3 = (ImageView) findViewById(R.id.diceImage3);
@@ -33,6 +51,9 @@ public class MainActivity extends ActionBarActivity {
         dice6 = (ImageView) findViewById(R.id.diceImage6);
         turnScore = (TextView) findViewById(R.id.turnScore);
         totalScore = (TextView) findViewById(R.id.totalScore);
+
+
+
     }
 
     @Override
@@ -225,6 +246,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
+        //Save preferences instead
         new AlertDialog.Builder(this)
                 .setTitle("Really Exit?")
                 .setMessage("Are you sure you want to exit?")
@@ -232,7 +254,7 @@ public class MainActivity extends ActionBarActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface arg0, int arg1) {
-                        MainActivity.super.onBackPressed();
+                        GameActivity.super.onBackPressed();
                     }
                 }).create().show();
     }

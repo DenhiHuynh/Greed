@@ -1,6 +1,7 @@
 package com.example.denhi.greed;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -24,8 +25,7 @@ public class WinScreenActivity extends ActionBarActivity {
 
         TextView winText = (TextView) findViewById(R.id.winText);
         winText.setText("You got " + totalScore + " \nin " + rounds + " rounds.");
-
-
+        getSharedPreferences("greed", Context.MODE_PRIVATE).edit().remove("resume").apply();
     }
 
     @Override
@@ -51,14 +51,12 @@ public class WinScreenActivity extends ActionBarActivity {
     }
 
     public void startNewGame(View view){
-        //Return to old screen
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this,GameActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-
             new AlertDialog.Builder(this)
                     .setTitle("Start new game")
                     .setMessage("Would you like to start a new game?")

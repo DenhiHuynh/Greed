@@ -24,6 +24,10 @@ public class Greed {
         }
     }
 
+//    public Greed(int totalScore, int turnScore, int rounds, int lastRollScore, boolean ){
+//
+//    }
+
     /**
      * Sets the hold dice value for a specific dice.
      *
