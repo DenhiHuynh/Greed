@@ -9,9 +9,9 @@ public class Dice {
     private int diceValue;
     private boolean holdDiceValue;
 
-    public Dice() {
-        diceValue = 1;
-        holdDiceValue = false;
+    public Dice(int diceValue, boolean diceHold) {
+        this.diceValue = diceValue;
+        holdDiceValue = diceHold;
     }
 
     /**

@@ -25,7 +25,7 @@ public class WinScreenActivity extends ActionBarActivity {
 
         TextView winText = (TextView) findViewById(R.id.winText);
         winText.setText("You got " + totalScore + " \nin " + rounds + " rounds.");
-        getSharedPreferences("greed", Context.MODE_PRIVATE).edit().remove("resume").apply();
+        getSharedPreferences("greed", Context.MODE_PRIVATE).edit().putBoolean("resume",false).apply();
     }
 
     @Override
@@ -51,8 +51,15 @@ public class WinScreenActivity extends ActionBarActivity {
     }
 
     public void startNewGame(View view){
+        getSharedPreferences("greed", Context.MODE_PRIVATE).edit().putBoolean("resume",false).apply();
         Intent intent = new Intent(this,GameActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getSharedPreferences("greed", Context.MODE_PRIVATE).edit().putBoolean("resume",false).apply();
     }
 
     @Override
@@ -64,6 +71,7 @@ public class WinScreenActivity extends ActionBarActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface arg0, int arg1) {
+                            getSharedPreferences("greed", Context.MODE_PRIVATE).edit().putBoolean("resume",false).apply();
                             startNewGame(null);
                         }
                     }).create().show();

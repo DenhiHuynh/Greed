@@ -14,14 +14,12 @@ import android.widget.Button;
 
 
 public class StartActivity extends ActionBarActivity {
-    private SharedPreferences prefs;
     private boolean onGoingGameExists;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
-        prefs = this.getSharedPreferences("greed", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
         onGoingGameExists = prefs.getBoolean("resume", false);
         if(!onGoingGameExists){
             Button button = (Button) findViewById(R.id.resumeButton);
@@ -52,15 +50,30 @@ public class StartActivity extends ActionBarActivity {
     }
 
     public void startNewGame(View view) {
-        prefs.edit().remove("resume").apply();
+        SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
+        prefs.edit().putBoolean("resume",false).apply();
         Intent intent = new Intent(this,GameActivity.class);
         startActivity(intent);
     }
 
     public void resumeGame(View view) {
         if(onGoingGameExists) {
-            Intent intent = new Intent(this, GameActivity.class);
+            Intent intent = new Intent(this, GameActivity .class);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onStart();
+        SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
+        onGoingGameExists = prefs.getBoolean("resume", false);
+        if(!onGoingGameExists){
+            Button button = (Button) findViewById(R.id.resumeButton);
+            button.setAlpha(0.3f);
+        }else{
+            Button button = (Button) findViewById(R.id.resumeButton);
+            button.setAlpha(1f);
         }
     }
 

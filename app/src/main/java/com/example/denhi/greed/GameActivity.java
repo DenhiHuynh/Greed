@@ -22,27 +22,12 @@ public class GameActivity extends ActionBarActivity {
     private Greed greed;
     private ImageView dice1, dice2, dice3, dice4, dice5, dice6;
     private TextView turnScore, totalScore;
-    private SharedPreferences prefs;
-    private boolean onGoingGameExists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefs = this.getSharedPreferences("greed", Context.MODE_PRIVATE);
-        onGoingGameExists = prefs.getBoolean("resume", false);
-        if(!onGoingGameExists){
-            greed = new Greed();
-        }else{
-//            start ongoing game here
-//            int totalScore = prefs.getInt("totalScore", -1);
-//            int roundScore = prefs.getInt("roundScore", -1);
-//            int rounds = prefs.getInt("rounds", -1);
-//            int lastRollScore = prefs.getInt("lastRollScore", -1);
-//            boolean newRound = prefs.getBoolean("newRound", false);
-//            boolean lastRollHadFullHold = prefs.getBoolean("lastRollHadFullHold",false);
-        }
         dice1 = (ImageView) findViewById(R.id.diceImage1);
         dice2 = (ImageView) findViewById(R.id.diceImage2);
         dice3 = (ImageView) findViewById(R.id.diceImage3);
@@ -53,7 +38,65 @@ public class GameActivity extends ActionBarActivity {
         totalScore = (TextView) findViewById(R.id.totalScore);
 
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
+        boolean onGoingGameExists = prefs.getBoolean("resume", false);
+        if(!onGoingGameExists){
+            greed = new Greed();
+        }else{
+            greed = resumeGreedGame();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        greed.saveGameInstance(this);
+    }
+
+    private Greed resumeGreedGame() {
+        SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
+        int totalScore = prefs.getInt("totalScore", -1);
+        int turnScore = prefs.getInt("turnScore", -1);
+        this.totalScore.setText(Integer.toString(totalScore));
+        this.turnScore.setText(Integer.toString(turnScore));
+        int rounds = prefs.getInt("rounds", -1);
+        int lastRollScore = prefs.getInt("lastRollScore", -1);
+        boolean newRound = prefs.getBoolean("newRound", false);
+        boolean lastRollHadFullHold = prefs.getBoolean("lastRollHadFullHold", false);
+        ArrayList<Dice> dices = getResumedGameDiceList();
+        for (int i = 0; i < 6; i++) {
+            drawDice(dices.get(i), i + 1);
+        }
+        return new Greed(totalScore,turnScore,rounds,lastRollScore,newRound,lastRollHadFullHold,dices);
+    }
+
+    private ArrayList<Dice> getResumedGameDiceList() {
+        SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
+        int dice1 = prefs.getInt("dice1", -1);
+        boolean dice1Hold = prefs.getBoolean("dice1hold", false);
+        int dice2 = prefs.getInt("dice2", -1);
+        boolean dice2Hold = prefs.getBoolean("dice2hold", false);
+        int dice3 = prefs.getInt("dice3", -1);
+        boolean dice3Hold = prefs.getBoolean("dice3hold", false);
+        int dice4 = prefs.getInt("dice4", -1);
+        boolean dice4Hold = prefs.getBoolean("dice4hold", false);
+        int dice5 = prefs.getInt("dice5", -1);
+        boolean dice5Hold = prefs.getBoolean("dice5hold", false);
+        int dice6 = prefs.getInt("dice6", -1);
+        boolean dice6Hold = prefs.getBoolean("dice6hold", false);
+        ArrayList<Dice> diceList = new ArrayList<>();
+        diceList.add(new Dice(dice1,dice1Hold));
+        diceList.add(new Dice(dice2,dice2Hold));
+        diceList.add(new Dice(dice3,dice3Hold));
+        diceList.add(new Dice(dice4,dice4Hold));
+        diceList.add(new Dice(dice5,dice5Hold));
+        diceList.add(new Dice(dice6,dice6Hold));
+        return diceList;
     }
 
     @Override
@@ -135,36 +178,48 @@ public class GameActivity extends ActionBarActivity {
                     dice1.setImageResource(imageDrawableId);
                     if (!holdDice) {
                         dice1.setAlpha(1.0f);
+                    }else{
+                        dice1.setAlpha(0.5f);
                     }
                     break;
                 case 2:
                     dice2.setImageResource(imageDrawableId);
                     if (!holdDice) {
                         dice2.setAlpha(1.0f);
+                    }else{
+                        dice2.setAlpha(0.5f);
                     }
                     break;
                 case 3:
                     dice3.setImageResource(imageDrawableId);
                     if (!holdDice) {
                         dice3.setAlpha(1.0f);
+                    }else{
+                        dice3.setAlpha(0.5f);
                     }
                     break;
                 case 4:
                     dice4.setImageResource(imageDrawableId);
                     if (!holdDice) {
                         dice4.setAlpha(1.0f);
+                    }else{
+                        dice4.setAlpha(0.5f);
                     }
                     break;
                 case 5:
                     dice5.setImageResource(imageDrawableId);
                     if (!holdDice) {
                         dice5.setAlpha(1.0f);
+                    }else{
+                        dice5.setAlpha(0.5f);
                     }
                     break;
                 case 6:
                     dice6.setImageResource(imageDrawableId);
                     if (!holdDice) {
                         dice6.setAlpha(1.0f);
+                    }else{
+                        dice6.setAlpha(0.5f);
                     }
                     break;
 
@@ -246,17 +301,13 @@ public class GameActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        //Save preferences instead
-        new AlertDialog.Builder(this)
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        GameActivity.super.onBackPressed();
-                    }
-                }).create().show();
+        greed.saveGameInstance(this);
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
     }
+
+
+
+
 
 }
