@@ -9,6 +9,11 @@ public class Dice {
     private int diceValue;
     private boolean holdDiceValue;
 
+    /**
+     * Creates a new dice with specified values.
+     * @param diceValue is the value of the dice.
+     * @param diceHold if the dice should hold the value for new rolls (i.e if the dice should have the same value after new dice rolls).
+     */
     public Dice(int diceValue, boolean diceHold) {
         this.diceValue = diceValue;
         holdDiceValue = diceHold;

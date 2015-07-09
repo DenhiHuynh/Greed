@@ -50,6 +50,10 @@ public class WinScreenActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Starts a new greed game.
+     * @param view
+     */
     public void startNewGame(View view){
         getSharedPreferences("greed", Context.MODE_PRIVATE).edit().putBoolean("resume",false).apply();
         Intent intent = new Intent(this,GameActivity.class);

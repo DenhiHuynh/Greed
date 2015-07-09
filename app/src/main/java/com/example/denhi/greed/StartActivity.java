@@ -49,6 +49,10 @@ public class StartActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Starts a new greed game.
+     * @param view
+     */
     public void startNewGame(View view) {
         SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
         prefs.edit().putBoolean("resume",false).apply();
@@ -56,12 +60,17 @@ public class StartActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    /**
+     * Resumes an old game instance.
+     * @param view
+     */
     public void resumeGame(View view) {
         if(onGoingGameExists) {
             Intent intent = new Intent(this, GameActivity .class);
             startActivity(intent);
         }
     }
+
 
     @Override
     protected void onResume() {

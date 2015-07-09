@@ -28,13 +28,14 @@ public class Greed {
         lastRollHadFullHold = false;
         diceList = new ArrayList<>();
         for (int i = 1; i <= 6; i++) {
-            Dice dice = new Dice(i,false);
+            Dice dice = new Dice(i, false);
             diceList.add(dice);
         }
     }
 
     /**
      * Constructor for resumed game.
+     *
      * @param totalScore
      * @param turnScore
      * @param rounds
@@ -87,6 +88,11 @@ public class Greed {
         return true;
     }
 
+    /**
+     * Checks if no dices are held.
+     *
+     * @return the boolean value of the check.
+     */
     private boolean noDiceOnHold() {
         for (Dice d : diceList) {
             if (d.getHoldDice()) {
@@ -96,6 +102,11 @@ public class Greed {
         return true;
     }
 
+    /**
+     * Checks if all dices are held.
+     *
+     * @return the boolean value of the check.
+     */
     private boolean allDiceOnHold() {
         for (Dice d : diceList) {
             if (!d.getHoldDice()) {
@@ -105,6 +116,9 @@ public class Greed {
         return true;
     }
 
+    /**
+     * Sets diceHold to false for all dices.
+     */
     private void resetDiceHold() {
         for (Dice d : diceList) {
             d.setHoldDiceValue(false);
@@ -179,14 +193,19 @@ public class Greed {
         return turnScore;
     }
 
+
+    /**
+     * Saves to game state to shared preferences.
+     * @param context the activity calling this method.
+     */
     public void saveGameInstance(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("greed", Context.MODE_PRIVATE);
-        prefs.edit().putBoolean("resume",true).apply();
+        prefs.edit().putBoolean("resume", true).apply();
 
         prefs.edit().putBoolean("newRound", newRound).apply();
         prefs.edit().putBoolean("lastRollHadFullHold", lastRollHadFullHold).apply();
         prefs.edit().putInt("totalScore", totalScore).apply();
-        prefs.edit().putInt("turnScore",turnScore).apply();
+        prefs.edit().putInt("turnScore", turnScore).apply();
         prefs.edit().putInt("rounds", rounds).apply();
         prefs.edit().putInt("lastRollScore", lastRollScore).apply();
 
@@ -203,18 +222,30 @@ public class Greed {
         prefs.edit().putBoolean("dice3hold", diceList.get(2).getHoldDice()).apply();
         prefs.edit().putBoolean("dice4hold", diceList.get(3).getHoldDice()).apply();
         prefs.edit().putBoolean("dice5hold", diceList.get(4).getHoldDice()).apply();
-        prefs.edit().putBoolean("dice6hold",diceList.get(5).getHoldDice()).apply();
+        prefs.edit().putBoolean("dice6hold", diceList.get(5).getHoldDice()).apply();
 
     }
 
+    /**
+     * Gets the dicelist.
+     * @return the dicelist.
+     */
     public ArrayList<Dice> getDiceList() {
         return diceList;
     }
 
+    /**
+     * Gets the turn score.
+     * @return the turn score.
+     */
     public int getTurnScore() {
         return turnScore;
     }
 
+    /**
+     * Gets the boolean value if it is a new round.
+     * @return the boolean value of newRound.
+     */
     public boolean isNewRound() {
         return newRound;
     }

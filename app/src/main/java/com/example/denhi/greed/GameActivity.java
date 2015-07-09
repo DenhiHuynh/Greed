@@ -58,6 +58,10 @@ public class GameActivity extends ActionBarActivity {
         greed.saveGameInstance(this);
     }
 
+    /**
+     * Gathers values from previously saved game.
+     * @return a new Greed object containing the values from the last saved game state.
+     */
     private Greed resumeGreedGame() {
         SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
         int totalScore = prefs.getInt("totalScore", -1);
@@ -75,6 +79,10 @@ public class GameActivity extends ActionBarActivity {
         return new Greed(totalScore,turnScore,rounds,lastRollScore,newRound,lastRollHadFullHold,dices);
     }
 
+    /**
+     * Gathers dice values from shared preferences.
+     * @return the list of dices from the last saved game state.
+     */
     private ArrayList<Dice> getResumedGameDiceList() {
         SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
         int dice1 = prefs.getInt("dice1", -1);
@@ -121,6 +129,10 @@ public class GameActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Saves the points gathered in the current round.
+     * @param view the view which called this method.
+     */
     public void score(View view) {
         boolean hasWon = greed.addToTotalScore();
         int total = greed.getTotalScore();
@@ -144,6 +156,10 @@ public class GameActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Rolls the dices which can be rolled(i.e not held dices). Also draws the new dices.
+     * @param view the view which called this method.
+     */
     public void roll(View view) {
         boolean success = greed.rollAllDices();
         if (!success) {
