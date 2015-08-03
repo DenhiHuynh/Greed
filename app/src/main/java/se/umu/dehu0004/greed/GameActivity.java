@@ -140,8 +140,6 @@ public class GameActivity extends ActionBarActivity {
             totalScore.setText(Integer.toString(total));
             turnScore.setText(Integer.toString(turn));
             rounds.setText(Integer.toString(roundsNumber));
-            Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
-                    Toast.LENGTH_SHORT).show();
             ArrayList<Die> dieValues = greed.getDieList();
             for (int i = 0; i < 6; i++) {
                 drawDie(dieValues.get(i), i + 1);
@@ -174,8 +172,6 @@ public class GameActivity extends ActionBarActivity {
             }
             if (greed.isNewRound()) {
                 rounds.setText(Integer.toString(greed.getRounds()));
-                Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
-                        Toast.LENGTH_SHORT).show();
             }
         }
     }

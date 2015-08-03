@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="Congratulations, \nyou've won!"
+        android:text="Congrats, you've won!"
         android:textSize="30sp" />
 
     <TextView
