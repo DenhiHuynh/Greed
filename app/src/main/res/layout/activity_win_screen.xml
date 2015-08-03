@@ -20,17 +20,30 @@
         android:id="@+id/winText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:textSize="30sp" />
 
-    <ImageView
-        android:id="@+id/success"
+    <TextView
         android:layout_below="@id/winText"
+        android:id="@+id/roundsWonText"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="120sp"
+        android:background="@drawable/textview_round"/>
+
+    <TextView
+        android:layout_below="@id/roundsWonText"
+        android:id="@+id/roundsWonText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/successkid"/>
-
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_gravity="right"
+        android:textSize="30sp" />
     <Button
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

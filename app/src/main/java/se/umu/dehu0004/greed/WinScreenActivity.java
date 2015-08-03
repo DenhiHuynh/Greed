@@ -24,7 +24,11 @@ public class WinScreenActivity extends ActionBarActivity {
         int rounds = intent.getIntExtra("Rounds", -1);
 
         TextView winText = (TextView) findViewById(R.id.winText);
-        winText.setText("You got " + totalScore + " \nin " + rounds + " rounds.");
+        winText.setText("You got " + totalScore + " points in\n ");
+        TextView roundsText = (TextView) findViewById(R.id.roundsWonText);
+        roundsText.setText(Integer.toString(rounds));
+        TextView roundsText2 = (TextView) findViewById(R.id.roundsWonText2);
+        roundsText2.setText(" rounds");
         getSharedPreferences("greed", Context.MODE_PRIVATE).edit().putBoolean("resume",false).apply();
     }
 
