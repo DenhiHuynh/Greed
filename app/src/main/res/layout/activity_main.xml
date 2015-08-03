@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal|center_vertical"
+            android:gravity="start|center_vertical"
             android:text="@string/textView_total"
             android:textSize="30sp" />
 
@@ -46,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal|center_vertical"
+            android:gravity="start|center_vertical"
             android:text="@string/textView_turnScore"
             android:textSize="30sp" />
 
@@ -61,39 +61,65 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearlayoutdices1to3"
+        android:id="@+id/linearlayoutrounds"
         android:layout_below="@id/linearlayoutscore2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/roundsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:text="@string/textView_Rounds"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/rounds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
+            android:text="@string/textView_zero"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearlayoutdices1to3"
+        android:layout_below="@id/linearlayoutrounds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <ImageView
-            android:id="@+id/diceImage1"
+            android:id="@+id/dieImage1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="saveDiceValue"
-            android:src="@drawable/dice1" />
+            android:onClick="saveDieValue"
+            android:src="@drawable/die1" />
 
         <ImageView
-            android:id="@+id/diceImage2"
+            android:id="@+id/dieImage2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:gravity="center"
-            android:onClick="saveDiceValue"
-            android:src="@drawable/dice2" />
+            android:onClick="saveDieValue"
+            android:src="@drawable/die2" />
 
         <ImageView
-            android:id="@+id/diceImage3"
+            android:id="@+id/dieImage3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="saveDiceValue"
-            android:src="@drawable/dice3" />
+            android:onClick="saveDieValue"
+            android:src="@drawable/die3" />
     </LinearLayout>
 
 
@@ -105,33 +131,33 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/diceImage4"
+            android:id="@+id/dieImage4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="saveDiceValue"
-            android:src="@drawable/dice5" />
+            android:onClick="saveDieValue"
+            android:src="@drawable/die5" />
 
         <ImageView
-            android:id="@+id/diceImage5"
+            android:id="@+id/dieImage5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:gravity="center"
-            android:onClick="saveDiceValue"
-            android:src="@drawable/dice6" />
+            android:onClick="saveDieValue"
+            android:src="@drawable/die6" />
 
         <ImageView
-            android:id="@+id/diceImage6"
+            android:id="@+id/dieImage6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="saveDiceValue"
-            android:src="@drawable/dice4" />
+            android:onClick="saveDieValue"
+            android:src="@drawable/die4" />
     </LinearLayout>
 
     <LinearLayout

@@ -9,9 +9,10 @@
     <string name="button_score">Score</string>
     <string name="button_roll">Roll</string>
     <string name="title_activity_win_screen">WinScreenActivity</string>
-    <string name="greed_round_over">Round over, next player</string>
-    <string name="Roll_fail_message">Choose at least one dice to hold before rolling</string>
+    <string name="greed_round_over">Round over, starting new round.</string>
+    <string name="Roll_fail_message">Choose at least one die to hold before rolling</string>
     <string name="title_activity_start">StartActivity</string>
     <string name="startscreen_new_game">Start new game</string>
     <string name="startscreen_resume_game">Resume game</string>
+    <string name="textView_Rounds">Rounds: </string>
 </resources>

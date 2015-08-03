@@ -1,8 +1,6 @@
-package com.example.denhi.greed;
+package se.umu.dehu0004.greed;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +8,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,23 +17,23 @@ import java.util.ArrayList;
 
 public class GameActivity extends ActionBarActivity {
     private Greed greed;
-    private ImageView dice1, dice2, dice3, dice4, dice5, dice6;
-    private TextView turnScore, totalScore;
+    private ImageView die1, die2, die3, die4, die5, die6;
+    private TextView turnScore, totalScore, rounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dice1 = (ImageView) findViewById(R.id.diceImage1);
-        dice2 = (ImageView) findViewById(R.id.diceImage2);
-        dice3 = (ImageView) findViewById(R.id.diceImage3);
-        dice4 = (ImageView) findViewById(R.id.diceImage4);
-        dice5 = (ImageView) findViewById(R.id.diceImage5);
-        dice6 = (ImageView) findViewById(R.id.diceImage6);
+        die1 = (ImageView) findViewById(R.id.dieImage1);
+        die2 = (ImageView) findViewById(R.id.dieImage2);
+        die3 = (ImageView) findViewById(R.id.dieImage3);
+        die4 = (ImageView) findViewById(R.id.dieImage4);
+        die5 = (ImageView) findViewById(R.id.dieImage5);
+        die6 = (ImageView) findViewById(R.id.dieImage6);
         turnScore = (TextView) findViewById(R.id.turnScore);
         totalScore = (TextView) findViewById(R.id.totalScore);
-
+        rounds = (TextView) findViewById(R.id.rounds);
 
     }
 
@@ -66,45 +63,46 @@ public class GameActivity extends ActionBarActivity {
         SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
         int totalScore = prefs.getInt("totalScore", -1);
         int turnScore = prefs.getInt("turnScore", -1);
+        int rounds = prefs.getInt("rounds", -1);
         this.totalScore.setText(Integer.toString(totalScore));
         this.turnScore.setText(Integer.toString(turnScore));
-        int rounds = prefs.getInt("rounds", -1);
+        this.rounds.setText(Integer.toString(rounds));
         int lastRollScore = prefs.getInt("lastRollScore", -1);
         boolean newRound = prefs.getBoolean("newRound", false);
         boolean lastRollHadFullHold = prefs.getBoolean("lastRollHadFullHold", false);
-        ArrayList<Dice> dices = getResumedGameDiceList();
+        ArrayList<Die> dies = getResumedGameDiceList();
         for (int i = 0; i < 6; i++) {
-            drawDice(dices.get(i), i + 1);
+            drawDie(dies.get(i), i + 1);
         }
-        return new Greed(totalScore,turnScore,rounds,lastRollScore,newRound,lastRollHadFullHold,dices);
+        return new Greed(totalScore,turnScore,rounds,lastRollScore,newRound,lastRollHadFullHold, dies);
     }
 
     /**
      * Gathers dice values from shared preferences.
      * @return the list of dices from the last saved game state.
      */
-    private ArrayList<Dice> getResumedGameDiceList() {
+    private ArrayList<Die> getResumedGameDiceList() {
         SharedPreferences prefs = getSharedPreferences("greed", Context.MODE_PRIVATE);
-        int dice1 = prefs.getInt("dice1", -1);
-        boolean dice1Hold = prefs.getBoolean("dice1hold", false);
-        int dice2 = prefs.getInt("dice2", -1);
-        boolean dice2Hold = prefs.getBoolean("dice2hold", false);
-        int dice3 = prefs.getInt("dice3", -1);
-        boolean dice3Hold = prefs.getBoolean("dice3hold", false);
-        int dice4 = prefs.getInt("dice4", -1);
-        boolean dice4Hold = prefs.getBoolean("dice4hold", false);
-        int dice5 = prefs.getInt("dice5", -1);
-        boolean dice5Hold = prefs.getBoolean("dice5hold", false);
-        int dice6 = prefs.getInt("dice6", -1);
-        boolean dice6Hold = prefs.getBoolean("dice6hold", false);
-        ArrayList<Dice> diceList = new ArrayList<>();
-        diceList.add(new Dice(dice1,dice1Hold));
-        diceList.add(new Dice(dice2,dice2Hold));
-        diceList.add(new Dice(dice3,dice3Hold));
-        diceList.add(new Dice(dice4,dice4Hold));
-        diceList.add(new Dice(dice5,dice5Hold));
-        diceList.add(new Dice(dice6,dice6Hold));
-        return diceList;
+        int die1 = prefs.getInt("die1", -1);
+        boolean die1Hold = prefs.getBoolean("die1hold", false);
+        int die2 = prefs.getInt("die2", -1);
+        boolean die2Hold = prefs.getBoolean("die2hold", false);
+        int die3 = prefs.getInt("die3", -1);
+        boolean die3Hold = prefs.getBoolean("die3hold", false);
+        int die4 = prefs.getInt("die4", -1);
+        boolean die4Hold = prefs.getBoolean("die4hold", false);
+        int die5 = prefs.getInt("die5", -1);
+        boolean die5Hold = prefs.getBoolean("die5hold", false);
+        int die6 = prefs.getInt("die6", -1);
+        boolean die6Hold = prefs.getBoolean("die6hold", false);
+        ArrayList<Die> dieList = new ArrayList<>();
+        dieList.add(new Die(die1,die1Hold));
+        dieList.add(new Die(die2,die2Hold));
+        dieList.add(new Die(die3,die3Hold));
+        dieList.add(new Die(die4,die4Hold));
+        dieList.add(new Die(die5,die5Hold));
+        dieList.add(new Die(die6,die6Hold));
+        return dieList;
     }
 
     @Override
@@ -137,14 +135,16 @@ public class GameActivity extends ActionBarActivity {
         boolean hasWon = greed.addToTotalScore();
         int total = greed.getTotalScore();
         int turn = greed.getTurnScore();
+        int roundsNumber = greed.getRounds();
         if (!hasWon) {
             totalScore.setText(Integer.toString(total));
             turnScore.setText(Integer.toString(turn));
+            rounds.setText(Integer.toString(roundsNumber));
             Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
                     Toast.LENGTH_SHORT).show();
-            ArrayList<Dice> diceValues = greed.getDiceList();
+            ArrayList<Die> dieValues = greed.getDieList();
             for (int i = 0; i < 6; i++) {
-                drawDice(diceValues.get(i), i + 1);
+                drawDie(dieValues.get(i), i + 1);
             }
 
         } else {
@@ -157,22 +157,23 @@ public class GameActivity extends ActionBarActivity {
     }
 
     /**
-     * Rolls the dices which can be rolled(i.e not held dices). Also draws the new dices.
+     * Rolls the dice which can be rolled(i.e not held dice). Also draws the new dice.
      * @param view the view which called this method.
      */
     public void roll(View view) {
-        boolean success = greed.rollAllDices();
+        boolean success = greed.rollAllDice();
         if (!success) {
             Toast.makeText(getApplicationContext(), getString(R.string.Roll_fail_message),
                     Toast.LENGTH_SHORT).show();
         } else {
             int thisTurnScore = greed.evaluateScore();
             turnScore.setText(Integer.toString(thisTurnScore));
-            ArrayList<Dice> diceValues = greed.getDiceList();
+            ArrayList<Die> dieValues = greed.getDieList();
             for (int i = 0; i < 6; i++) {
-                drawDice(diceValues.get(i), i + 1);
+                drawDie(dieValues.get(i), i + 1);
             }
             if (greed.isNewRound()) {
+                rounds.setText(Integer.toString(greed.getRounds()));
                 Toast.makeText(getApplicationContext(), getString(R.string.greed_round_over),
                         Toast.LENGTH_SHORT).show();
             }
@@ -182,60 +183,60 @@ public class GameActivity extends ActionBarActivity {
     /**
      * Draws the new image to the correct imageView.
      *
-     * @param dice       The value of the new dice
-     * @param diceNumber Which dice to change.
+     * @param die       The value of the new die
+     * @param dieNumber Which die to change.
      */
-    private void drawDice(Dice dice, int diceNumber) {
-        int imageDrawableId = findImageResource(dice.getDiceValue());
-        boolean holdDice = dice.getHoldDice();
+    private void drawDie(Die die, int dieNumber) {
+        int imageDrawableId = findImageResource(die.getDieValue());
+        boolean holdDie = die.getHoldDie();
         if (imageDrawableId != -1) {
-            switch (diceNumber) {
+            switch (dieNumber) {
                 case 1:
-                    dice1.setImageResource(imageDrawableId);
-                    if (!holdDice) {
-                        dice1.setAlpha(1.0f);
+                    die1.setImageResource(imageDrawableId);
+                    if (!holdDie) {
+                        die1.setAlpha(1.0f);
                     }else{
-                        dice1.setAlpha(0.5f);
+                        die1.setAlpha(0.5f);
                     }
                     break;
                 case 2:
-                    dice2.setImageResource(imageDrawableId);
-                    if (!holdDice) {
-                        dice2.setAlpha(1.0f);
+                    die2.setImageResource(imageDrawableId);
+                    if (!holdDie) {
+                        die2.setAlpha(1.0f);
                     }else{
-                        dice2.setAlpha(0.5f);
+                        die2.setAlpha(0.5f);
                     }
                     break;
                 case 3:
-                    dice3.setImageResource(imageDrawableId);
-                    if (!holdDice) {
-                        dice3.setAlpha(1.0f);
+                    die3.setImageResource(imageDrawableId);
+                    if (!holdDie) {
+                        die3.setAlpha(1.0f);
                     }else{
-                        dice3.setAlpha(0.5f);
+                        die3.setAlpha(0.5f);
                     }
                     break;
                 case 4:
-                    dice4.setImageResource(imageDrawableId);
-                    if (!holdDice) {
-                        dice4.setAlpha(1.0f);
+                    die4.setImageResource(imageDrawableId);
+                    if (!holdDie) {
+                        die4.setAlpha(1.0f);
                     }else{
-                        dice4.setAlpha(0.5f);
+                        die4.setAlpha(0.5f);
                     }
                     break;
                 case 5:
-                    dice5.setImageResource(imageDrawableId);
-                    if (!holdDice) {
-                        dice5.setAlpha(1.0f);
+                    die5.setImageResource(imageDrawableId);
+                    if (!holdDie) {
+                        die5.setAlpha(1.0f);
                     }else{
-                        dice5.setAlpha(0.5f);
+                        die5.setAlpha(0.5f);
                     }
                     break;
                 case 6:
-                    dice6.setImageResource(imageDrawableId);
-                    if (!holdDice) {
-                        dice6.setAlpha(1.0f);
+                    die6.setImageResource(imageDrawableId);
+                    if (!holdDie) {
+                        die6.setAlpha(1.0f);
                     }else{
-                        dice6.setAlpha(0.5f);
+                        die6.setAlpha(0.5f);
                     }
                     break;
 
@@ -244,73 +245,73 @@ public class GameActivity extends ActionBarActivity {
     }
 
     /**
-     * Finds the drawable id for the correct dice.
+     * Finds the drawable id for the correct die.
      *
-     * @param diceValue The value of the dice.
+     * @param dieValue The value of the die.
      * @return The drawable id. -1 if not found.
      */
-    private int findImageResource(int diceValue) {
-        switch (diceValue) {
+    private int findImageResource(int dieValue) {
+        switch (dieValue) {
             case 1:
-                return R.drawable.dice1;
+                return R.drawable.die1;
             case 2:
-                return R.drawable.dice2;
+                return R.drawable.die2;
             case 3:
-                return R.drawable.dice3;
+                return R.drawable.die3;
             case 4:
-                return R.drawable.dice4;
+                return R.drawable.die4;
             case 5:
-                return R.drawable.dice5;
+                return R.drawable.die5;
             case 6:
-                return R.drawable.dice6;
+                return R.drawable.die6;
 
         }
         return -1; //This should never happen
     }
 
 
-    public void saveDiceValue(View view) {
+    public void saveDieValue(View view) {
         boolean success = false;
         switch (view.getId()) {
-            case R.id.diceImage1:
-                success = greed.setHoldDice(0, true);
+            case R.id.dieImage1:
+                success = greed.setHoldDie(0, true);
                 if(success) {
-                    dice1.setAlpha(0.5f);
+                    die1.setAlpha(0.5f);
                 }
                 break;
-            case R.id.diceImage2:
-                success = greed.setHoldDice(1, true);
+            case R.id.dieImage2:
+                success = greed.setHoldDie(1, true);
                 if(success) {
-                    dice2.setAlpha(0.5f);
+                    die2.setAlpha(0.5f);
                 }
                 break;
-            case R.id.diceImage3:
-                success = greed.setHoldDice(2,true);
+            case R.id.dieImage3:
+                success = greed.setHoldDie(2, true);
                 if(success) {
-                    dice3.setAlpha(0.5f);
+                    die3.setAlpha(0.5f);
                 }
                 break;
-            case R.id.diceImage4:
-                success = greed.setHoldDice(3, true);
+            case R.id.dieImage4:
+                success = greed.setHoldDie(3, true);
                 if(success) {
-                    dice4.setAlpha(0.5f);
+                    die4.setAlpha(0.5f);
                 }
                 break;
-            case R.id.diceImage5:
-                success = greed.setHoldDice(4, true);
+            case R.id.dieImage5:
+                success = greed.setHoldDie(4, true);
                 if(success) {
-                    dice5.setAlpha(0.5f);
+                    die5.setAlpha(0.5f);
                 }
                 break;
-            case R.id.diceImage6:
-                success = greed.setHoldDice(5, true);
+            case R.id.dieImage6:
+                success = greed.setHoldDie(5, true);
                 if(success) {
-                    dice6.setAlpha(0.5f);
+                    die6.setAlpha(0.5f);
                 }
                 break;
         }
         if(!success){
-            Toast.makeText(getApplicationContext(), "Can not hold any dice during first round",
+            Toast.makeText(getApplicationContext(), "Can not hold any die during first round",
                     Toast.LENGTH_SHORT).show();
         }
     }

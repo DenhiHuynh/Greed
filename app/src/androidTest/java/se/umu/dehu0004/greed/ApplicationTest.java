@@ -1,4 +1,4 @@
-package com.example.denhi.greed;
+package se.umu.dehu0004.greed;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:background="@drawable/gradient"
-    tools:context="com.example.denhi.greed.StartActivity">
+    tools:context="se.umu.dehu0004.greed.StartActivity">
 
     <TextView
         android:layout_width="match_parent"

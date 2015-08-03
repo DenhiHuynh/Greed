@@ -1,4 +1,4 @@
-package com.example.denhi.greed;
+package se.umu.dehu0004.greed;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +13,7 @@ public class Greed {
     private Activity activity;
     private int totalScore, turnScore, rounds, lastRollScore;
     private boolean newRound, lastRollHadFullHold;
-    private ArrayList<Dice> diceList;
+    private ArrayList<Die> dieList;
 
 
     /**
@@ -26,10 +26,10 @@ public class Greed {
         rounds = 0;
         newRound = true;
         lastRollHadFullHold = false;
-        diceList = new ArrayList<>();
+        dieList = new ArrayList<>();
         for (int i = 1; i <= 6; i++) {
-            Dice dice = new Dice(i, false);
-            diceList.add(dice);
+            Die die = new Die(i, false);
+            dieList.add(die);
         }
     }
 
@@ -42,39 +42,39 @@ public class Greed {
      * @param lastRollScore
      * @param newRound
      * @param lastRollHadFullHold
-     * @param diceList
+     * @param dieList
      */
-    public Greed(int totalScore, int turnScore, int rounds, int lastRollScore, boolean newRound, boolean lastRollHadFullHold, ArrayList<Dice> diceList) {
+    public Greed(int totalScore, int turnScore, int rounds, int lastRollScore, boolean newRound, boolean lastRollHadFullHold, ArrayList<Die> dieList) {
         this.totalScore = totalScore;
         this.turnScore = turnScore;
         this.rounds = rounds;
         this.lastRollScore = lastRollScore;
         this.newRound = newRound;
         this.lastRollHadFullHold = lastRollHadFullHold;
-        this.diceList = diceList;
+        this.dieList = dieList;
     }
 
     /**
-     * Sets the hold dice value for a specific dice.
+     * Sets the hold die value for a specific die.
      *
-     * @param diceNbr which dice to hold the value for, starting from index 0 to 5.
+     * @param dieNbr which die to hold the value for, starting from index 0 to 5.
      * @param value   the value to hold.
      */
-    public boolean setHoldDice(int diceNbr, boolean value) {
+    public boolean setHoldDie(int dieNbr, boolean value) {
         if (newRound) {
             return false;
         }
-        Dice dice = diceList.get(diceNbr);
-        dice.setHoldDiceValue(value);
+        Die die = dieList.get(dieNbr);
+        die.setHoldDieValue(value);
         return true;
     }
 
     /**
-     * Rolls all 6 dices
+     * Rolls all 6 dice
      *
-     * @return the dice value for each dice so it can be updated in the user interface.
+     * @return the die value for each die so it can be updated in the user interface.
      */
-    public boolean rollAllDices() {
+    public boolean rollAllDice() {
         if (!newRound && noDiceOnHold()) {
             return false;
         }
@@ -82,20 +82,20 @@ public class Greed {
             lastRollHadFullHold = true;
             resetDiceHold();
         }
-        for (Dice d : diceList) {
-            d.rollDice();
+        for (Die d : dieList) {
+            d.rollDie();
         }
         return true;
     }
 
     /**
-     * Checks if no dices are held.
+     * Checks if no dice are held.
      *
      * @return the boolean value of the check.
      */
     private boolean noDiceOnHold() {
-        for (Dice d : diceList) {
-            if (d.getHoldDice()) {
+        for (Die d : dieList) {
+            if (d.getHoldDie()) {
                 return false;
             }
         }
@@ -103,13 +103,13 @@ public class Greed {
     }
 
     /**
-     * Checks if all dices are held.
+     * Checks if all dice are held.
      *
      * @return the boolean value of the check.
      */
     private boolean allDiceOnHold() {
-        for (Dice d : diceList) {
-            if (!d.getHoldDice()) {
+        for (Die d : dieList) {
+            if (!d.getHoldDie()) {
                 return false;
             }
         }
@@ -117,11 +117,11 @@ public class Greed {
     }
 
     /**
-     * Sets diceHold to false for all dices.
+     * Sets dieHold to false for all dice.
      */
     private void resetDiceHold() {
-        for (Dice d : diceList) {
-            d.setHoldDiceValue(false);
+        for (Die d : dieList) {
+            d.setHoldDieValue(false);
         }
     }
 
@@ -140,33 +140,16 @@ public class Greed {
     }
 
     /**
-     * Gets the total score
-     *
-     * @return the total score
-     */
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    /**
-     * Gets the total score
-     *
-     * @return the total score
-     */
-    public int getRounds() {
-        return rounds;
-    }
-
-    /**
      * Evaluates score according to greed rules
      *
      * @return the turn score.
      */
     public int evaluateScore() {
-        int score = GreedRules.calculateRoundScore(diceList);
+        int score = GreedRules.calculateRoundScore(dieList);
         if (newRound && score < 300) {
             resetDiceHold();
             turnScore = 0;
+            rounds++;
         } else if (newRound && score >= 300) {
             resetDiceHold();
             newRound = false;
@@ -183,6 +166,7 @@ public class Greed {
             if (newPoints == 0) {
                 resetDiceHold();
                 newRound = true;
+                rounds++;
                 lastRollScore = 0;
                 turnScore = 0;
             } else {
@@ -192,7 +176,6 @@ public class Greed {
         }
         return turnScore;
     }
-
 
     /**
      * Saves to game state to shared preferences.
@@ -210,28 +193,29 @@ public class Greed {
         prefs.edit().putInt("lastRollScore", lastRollScore).apply();
 
 
-        prefs.edit().putInt("dice1", diceList.get(0).getDiceValue()).apply();
-        prefs.edit().putInt("dice2", diceList.get(1).getDiceValue()).apply();
-        prefs.edit().putInt("dice3", diceList.get(2).getDiceValue()).apply();
-        prefs.edit().putInt("dice4", diceList.get(3).getDiceValue()).apply();
-        prefs.edit().putInt("dice5", diceList.get(4).getDiceValue()).apply();
-        prefs.edit().putInt("dice6", diceList.get(5).getDiceValue()).apply();
+        prefs.edit().putInt("die1", dieList.get(0).getDieValue()).apply();
+        prefs.edit().putInt("die2", dieList.get(1).getDieValue()).apply();
+        prefs.edit().putInt("die3", dieList.get(2).getDieValue()).apply();
+        prefs.edit().putInt("die4", dieList.get(3).getDieValue()).apply();
+        prefs.edit().putInt("die5", dieList.get(4).getDieValue()).apply();
+        prefs.edit().putInt("die6", dieList.get(5).getDieValue()).apply();
 
-        prefs.edit().putBoolean("dice1hold", diceList.get(0).getHoldDice()).apply();
-        prefs.edit().putBoolean("dice2hold", diceList.get(1).getHoldDice()).apply();
-        prefs.edit().putBoolean("dice3hold", diceList.get(2).getHoldDice()).apply();
-        prefs.edit().putBoolean("dice4hold", diceList.get(3).getHoldDice()).apply();
-        prefs.edit().putBoolean("dice5hold", diceList.get(4).getHoldDice()).apply();
-        prefs.edit().putBoolean("dice6hold", diceList.get(5).getHoldDice()).apply();
+        prefs.edit().putBoolean("die1hold", dieList.get(0).getHoldDie()).apply();
+        prefs.edit().putBoolean("die2hold", dieList.get(1).getHoldDie()).apply();
+        prefs.edit().putBoolean("die3hold", dieList.get(2).getHoldDie()).apply();
+        prefs.edit().putBoolean("die4hold", dieList.get(3).getHoldDie()).apply();
+        prefs.edit().putBoolean("die5hold", dieList.get(4).getHoldDie()).apply();
+        prefs.edit().putBoolean("die6hold", dieList.get(5).getHoldDie()).apply();
 
     }
 
+
     /**
-     * Gets the dicelist.
-     * @return the dicelist.
+     * Gets the dielist.
+     * @return the dielist.
      */
-    public ArrayList<Dice> getDiceList() {
-        return diceList;
+    public ArrayList<Die> getDieList() {
+        return dieList;
     }
 
     /**
@@ -248,5 +232,24 @@ public class Greed {
      */
     public boolean isNewRound() {
         return newRound;
+    }
+
+
+    /**
+     * Gets the total score
+     *
+     * @return the total score
+     */
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    /**
+     * Gets the total score
+     *
+     * @return the total score
+     */
+    public int getRounds() {
+        return rounds;
     }
 }
