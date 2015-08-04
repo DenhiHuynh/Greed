@@ -14,7 +14,7 @@ public class Greed {
     private int totalScore, turnScore, rounds, lastRollScore;
     private boolean newRound, lastRollHadFullHold;
     private ArrayList<Die> dieList;
-
+    private GreedRules greedRules;
 
     /**
      * Constructor for new game
@@ -31,6 +31,7 @@ public class Greed {
             Die die = new Die(i, false);
             dieList.add(die);
         }
+        greedRules = new GreedRules();
     }
 
     /**
@@ -52,21 +53,22 @@ public class Greed {
         this.newRound = newRound;
         this.lastRollHadFullHold = lastRollHadFullHold;
         this.dieList = dieList;
+        greedRules = new GreedRules();
     }
 
     /**
      * Sets the hold die value for a specific die.
      *
      * @param dieNbr which die to hold the value for, starting from index 0 to 5.
-     * @param value   the value to hold.
      */
-    public boolean setHoldDie(int dieNbr, boolean value) {
-        if (newRound) {
-            return false;
-        }
+    public boolean setHoldDie(int dieNbr) {
         Die die = dieList.get(dieNbr);
-        die.setHoldDieValue(value);
-        return true;
+        boolean holdDie = die.getHoldDie();
+        if (!newRound && greedRules.dieAllowedForHold(dieNbr, dieList)) {
+            holdDie = !holdDie;
+            die.setHoldDieValue(holdDie);
+        }
+        return holdDie;
     }
 
     /**
@@ -145,53 +147,63 @@ public class Greed {
      * @return the turn score.
      */
     public int evaluateScore() {
-        int score = GreedRules.calculateRoundScore(dieList);
-        if (newRound && score < 300) {
-            resetDiceHold();
-            turnScore = 0;
-            rounds++;
-        } else if (newRound && score >= 300) {
-            resetDiceHold();
-            newRound = false;
-            lastRollScore = score;
-            turnScore += score;
-        } else {
-            int newPoints;
-            if (lastRollHadFullHold) {
-                lastRollHadFullHold = false;
-                newPoints = score;
+        ArrayList<Die> heldDiceList = new ArrayList<>();
+        ArrayList<Die> notHeldDiceList = new ArrayList<>();
+        for (Die d : dieList) {
+            if (d.getHoldDie()) {
+                heldDiceList.add(d);
             } else {
-                newPoints = Math.abs(score - lastRollScore);
-            }
-            if (newPoints == 0) {
-                resetDiceHold();
-                newRound = true;
-                rounds++;
-                lastRollScore = 0;
-                turnScore = 0;
-            } else {
-                lastRollScore = score;
-                turnScore += newPoints;
+                notHeldDiceList.add(d);
             }
         }
+        int heldDiceScore = greedRules.calculateRoundScore(heldDiceList);
+        int notHeldDiceScore = greedRules.calculateRoundScore(notHeldDiceList);
+        int totalScore = heldDiceScore + notHeldDiceScore;
+
+        if (newRound) {
+            if (totalScore < 300) {
+                resetDiceHold();
+                turnScore = 0;
+                rounds++;
+            } else {
+                resetDiceHold();
+                newRound = false;
+                turnScore += totalScore;
+            }
+        } else {
+            if (notHeldDiceScore > 0) {
+                if(lastRollHadFullHold){
+                    lastRollHadFullHold = false;
+                    turnScore += totalScore;
+                }else {
+                    turnScore = totalScore;
+                }
+            } else {
+                resetDiceHold();
+                newRound = true;
+                turnScore = 0;
+                rounds++;
+            }
+        }
+
         return turnScore;
     }
 
     /**
      * Saves to game state to shared preferences.
+     *
      * @param context the activity calling this method.
      */
+
     public void saveGameInstance(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("greed", Context.MODE_PRIVATE);
         prefs.edit().putBoolean("resume", true).apply();
-
-        prefs.edit().putBoolean("newRound", newRound).apply();
         prefs.edit().putBoolean("lastRollHadFullHold", lastRollHadFullHold).apply();
+        prefs.edit().putBoolean("newRound", newRound).apply();
         prefs.edit().putInt("totalScore", totalScore).apply();
         prefs.edit().putInt("turnScore", turnScore).apply();
         prefs.edit().putInt("rounds", rounds).apply();
         prefs.edit().putInt("lastRollScore", lastRollScore).apply();
-
 
         prefs.edit().putInt("die1", dieList.get(0).getDieValue()).apply();
         prefs.edit().putInt("die2", dieList.get(1).getDieValue()).apply();
@@ -212,6 +224,7 @@ public class Greed {
 
     /**
      * Gets the dielist.
+     *
      * @return the dielist.
      */
     public ArrayList<Die> getDieList() {
@@ -220,6 +233,7 @@ public class Greed {
 
     /**
      * Gets the turn score.
+     *
      * @return the turn score.
      */
     public int getTurnScore() {
@@ -228,6 +242,7 @@ public class Greed {
 
     /**
      * Gets the boolean value if it is a new round.
+     *
      * @return the boolean value of newRound.
      */
     public boolean isNewRound() {

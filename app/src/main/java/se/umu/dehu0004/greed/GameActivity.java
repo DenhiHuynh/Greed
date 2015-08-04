@@ -3,8 +3,11 @@ package se.umu.dehu0004.greed;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +22,11 @@ public class GameActivity extends ActionBarActivity {
     private Greed greed;
     private ImageView die1, die2, die3, die4, die5, die6;
     private TextView turnScore, totalScore, rounds;
-
+    // The following are used for the shake detection
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeListener mShakeDetector;
+    private Vibrator v;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +42,34 @@ public class GameActivity extends ActionBarActivity {
         totalScore = (TextView) findViewById(R.id.totalScore);
         rounds = (TextView) findViewById(R.id.rounds);
 
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        // ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeListener();
+        mShakeDetector.setOnShakeListener(new ShakeListener.OnShakeListener() {
+
+            @Override
+            public void onShake(int count) {
+				roll(null);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 
     @Override
@@ -159,6 +194,7 @@ public class GameActivity extends ActionBarActivity {
      * @param view the view which called this method.
      */
     public void roll(View view) {
+        v.vibrate(200);
         boolean success = greed.rollAllDice();
         if (!success) {
             Toast.makeText(getApplicationContext(), getString(R.string.Roll_fail_message),
@@ -267,48 +303,56 @@ public class GameActivity extends ActionBarActivity {
 
 
     public void saveDieValue(View view) {
-        boolean success = false;
+        boolean held = false;
         switch (view.getId()) {
             case R.id.dieImage1:
-                success = greed.setHoldDie(0, true);
-                if(success) {
+                held = greed.setHoldDie(0);
+                if(held) {
                     die1.setAlpha(0.5f);
+                }else{
+                    die1.setAlpha(1f);
                 }
                 break;
             case R.id.dieImage2:
-                success = greed.setHoldDie(1, true);
-                if(success) {
+                held = greed.setHoldDie(1);
+                if(held) {
                     die2.setAlpha(0.5f);
+                }else{
+                    die2.setAlpha(1f);
                 }
                 break;
             case R.id.dieImage3:
-                success = greed.setHoldDie(2, true);
-                if(success) {
+                held = greed.setHoldDie(2);
+                if(held) {
                     die3.setAlpha(0.5f);
+                }else{
+                    die3.setAlpha(1f);
                 }
                 break;
             case R.id.dieImage4:
-                success = greed.setHoldDie(3, true);
-                if(success) {
+                held = greed.setHoldDie(3);
+                if(held) {
                     die4.setAlpha(0.5f);
+                }else{
+                    die4.setAlpha(1f);
                 }
                 break;
             case R.id.dieImage5:
-                success = greed.setHoldDie(4, true);
-                if(success) {
+                held = greed.setHoldDie(4);
+                if(held) {
                     die5.setAlpha(0.5f);
+                }else{
+                    die5.setAlpha(1f);
                 }
                 break;
             case R.id.dieImage6:
-                success = greed.setHoldDie(5, true);
-                if(success) {
+                held = greed.setHoldDie(5);
+                if(held) {
                     die6.setAlpha(0.5f);
+                }else{
+                    die6.setAlpha(1f);
                 }
                 break;
-        }
-        if(!success){
-            Toast.makeText(getApplicationContext(), "Can not hold any die during first round",
-                    Toast.LENGTH_SHORT).show();
         }
     }
 

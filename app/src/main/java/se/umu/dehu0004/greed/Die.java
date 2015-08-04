@@ -9,6 +9,7 @@ public class Die {
     private int dieValue;
     private boolean holdDieValue;
 
+
     /**
      * Creates a new die with specified values.
      * @param dieValue is the value of the die.
